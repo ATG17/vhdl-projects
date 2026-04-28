@@ -1,0 +1,23 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity dff_sync_rst is
+  port(
+    clk, rst, D : in  STD_LOGIC;
+    Q           : out STD_LOGIC
+  );
+end dff_sync_rst;
+
+architecture rtl of dff_sync_rst is
+begin
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      if rst = '1' then
+        Q <= '0';
+      else
+        Q <= D;
+      end if;
+end if;
+  end process;
+end rtl;
