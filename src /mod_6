@@ -1,0 +1,34 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity mod6_counter is
+    Port (
+        clk : in STD_LOGIC;
+        rst : in STD_LOGIC;
+        q   : out STD_LOGIC_VECTOR(2 downto 0)
+    );
+end mod6_counter;
+
+architecture rtl of mod6_counter is
+    signal count : unsigned(2 downto 0) := "000";
+begin
+
+process(clk)
+begin
+    if rising_edge(clk) then
+        if rst = '1' then
+            count <= "000";
+        
+        elsif count = "101" then   -- when 5
+            count <= "000";
+        
+        else
+            count <= count + 1;
+        end if;
+    end if;
+end process;
+
+q <= std_logic_vector(count);
+
+end rtl;
