@@ -1,0 +1,48 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity tb_sipo is
+end tb_sipo;
+
+architecture sim of tb_sipo is
+
+signal clk, rst, din : STD_LOGIC := '0';
+signal q : STD_LOGIC_VECTOR(3 downto 0);
+
+begin
+
+uut: entity work.sipo_4bit
+port map(
+    clk => clk,
+    rst => rst,
+    din => din,
+    q   => q
+);
+
+-- clock (longer run)
+process
+begin
+    for i in 0 to 50 loop   -- more cycles
+        clk <= '0'; wait for 5 ns;
+        clk <= '1'; wait for 5 ns;
+    end loop;
+    wait;
+end process;
+
+-- stimulus (aligned better)
+process
+begin
+    rst <= '1'; wait for 20 ns;
+    rst <= '0';
+
+    wait for 10 ns;  -- align with clock
+
+    din <= '1'; wait for 20 ns;
+    din <= '0'; wait for 20 ns;
+    din <= '1'; wait for 20 ns;
+    din <= '1'; wait for 20 ns;
+
+    wait;
+end process;
+
+end sim;
