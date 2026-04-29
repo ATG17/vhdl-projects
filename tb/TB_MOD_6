@@ -1,0 +1,50 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity tb_mod6 is
+end tb_mod6;
+
+architecture sim of tb_mod6 is
+
+-- DUT signals
+signal clk : STD_LOGIC := '0';
+signal rst : STD_LOGIC := '0';
+signal q   : STD_LOGIC_VECTOR(2 downto 0);
+
+begin
+
+uut: entity work.mod6_counter
+port map(
+    clk => clk,
+    rst => rst,
+    q   => q
+);
+
+clk_process: process
+begin
+    for i in 0 to 50 loop   -- finite cycles 
+        clk <= '0'; wait for 5 ns;
+        clk <= '1'; wait for 5 ns;
+    end loop;
+    wait;
+end process;
+
+
+stimulus: process
+begin
+    -- Apply reset
+    rst <= '1';wait for 10 ns;
+    rst <= '0';
+
+    -- Let counter run
+    wait for 100 ns;
+
+    -- Apply reset again (to test mid-operation)
+    rst <= '1';wait for 10 ns;
+    rst <= '0';
+
+    wait for 100 ns;
+      assert false report "Simulation Finished" severity note;
+end process;
+
+end sim;
