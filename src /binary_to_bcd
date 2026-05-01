@@ -1,0 +1,49 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity binary_to_bcd is
+    Port (
+        bin  : in  STD_LOGIC_VECTOR(7 downto 0);
+        bcd  : out STD_LOGIC_VECTOR(11 downto 0) -- 3 digits (Hundreds, Tens, Units)
+    );
+end binary_to_bcd;
+
+architecture rtl of binary_to_bcd is
+begin
+
+process(bin)
+    variable temp : unsigned(19 downto 0); -- extra space for shifting
+begin
+    temp := (others => '0');
+
+    -- place binary in lower bits
+    temp(7 downto 0) := unsigned(bin);
+
+    -- Double Dabble Algorithm
+    for i in 0 to 7 loop
+
+        -- check each BCD digit and add 3 if >= 5
+        if temp(11 downto 8) >= 5 then
+            temp(11 downto 8) := temp(11 downto 8) + 3;
+        end if;
+
+        if temp(15 downto 12) >= 5 then
+            temp(15 downto 12) := temp(15 downto 12) + 3;
+        end if;
+
+        if temp(19 downto 16) >= 5 then
+            temp(19 downto 16) := temp(19 downto 16) + 3;
+        end if;
+
+        -- shift left
+        temp := temp sll 1;
+
+    end loop;
+
+    -- assign BCD output
+    bcd <= std_logic_vector(temp(19 downto 8));
+
+end process;
+
+end rtl;
